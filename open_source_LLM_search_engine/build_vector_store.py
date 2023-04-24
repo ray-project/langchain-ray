@@ -11,31 +11,33 @@ from embeddings import LocalHuggingFaceEmbeddings
 # --convert-links --restrict-file-names=windows \
 # --domains docs.ray.io --no-parent https://docs.ray.io/en/master/
 
-FAISS_INDEX_PATH="faiss_index"
+FAISS_INDEX_PATH = "faiss_index"
 
 loader = ReadTheDocsLoader("docs.ray.io/en/master/")
 
 text_splitter = RecursiveCharacterTextSplitter(
     # Set a really small chunk size, just to show.
-    chunk_size = 300,
-    chunk_overlap  = 20,
-    length_function = len,
+    chunk_size=300,
+    chunk_overlap=20,
+    length_function=len,
 )
 
 # Stage one: read all the docs, split them into chunks.
 st = time.time()
-print('Loading documents ...')
+print("Loading documents ...")
 docs = loader.load()
-#Theoretically, we could use Ray to accelerate this, but it's fast enough as is.
-chunks = text_splitter.create_documents([doc.page_content for doc in docs], metadatas=[doc.metadata for doc in docs])
+# Theoretically, we could use Ray to accelerate this, but it's fast enough as is.
+chunks = text_splitter.create_documents(
+    [doc.page_content for doc in docs], metadatas=[doc.metadata for doc in docs]
+)
 et = time.time() - st
-print(f'Time taken: {et} seconds.')
+print(f"Time taken: {et} seconds.")
 
-#Stage two: embed the docs.
-embeddings = LocalHuggingFaceEmbeddings('multi-qa-mpnet-base-dot-v1')
-print(f'Loading chunks into vector store ...')
+# Stage two: embed the docs.
+embeddings = LocalHuggingFaceEmbeddings("multi-qa-mpnet-base-dot-v1")
+print(f"Loading chunks into vector store ...")
 st = time.time()
 db = FAISS.from_documents(chunks, embeddings)
 db.save_local(FAISS_INDEX_PATH)
 et = time.time() - st
-print(f'Time taken: {et} seconds.')
+print(f"Time taken: {et} seconds.")
