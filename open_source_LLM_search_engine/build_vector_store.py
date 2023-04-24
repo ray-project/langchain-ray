@@ -1,12 +1,9 @@
-from langchain.document_loaders import ReadTheDocsLoader
-from langchain.embeddings.base import Embeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from sentence_transformers import SentenceTransformer
-from langchain.vectorstores import FAISS
-from typing import List
 import time
-import os
-import ray
+
+from langchain.document_loaders import ReadTheDocsLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import FAISS
+
 from embeddings import LocalHuggingFaceEmbeddings
 
 # To download the files locally for processing, here's the command line

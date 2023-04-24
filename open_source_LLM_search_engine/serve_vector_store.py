@@ -1,10 +1,11 @@
-import ray
-from starlette.requests import Request
-from ray import serve
-from typing import List
-from embeddings import LocalHuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
 import time
+from typing import List
+
+from langchain.vectorstores import FAISS
+from ray import serve
+from starlette.requests import Request
+
+from embeddings import LocalHuggingFaceEmbeddings
 
 FAISS_INDEX_PATH = 'faiss_index'
 

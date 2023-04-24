@@ -1,5 +1,6 @@
-from langchain.embeddings.base import Embeddings
 from typing import List
+
+from langchain.embeddings.base import Embeddings
 from sentence_transformers import SentenceTransformer
 
 
