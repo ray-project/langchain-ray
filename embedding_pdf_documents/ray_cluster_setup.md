@@ -4,7 +4,7 @@ This is a more detailed walkthrough covering how to create the multi-node Ray cl
 The full Ray cluster launcher documentation can be found [here](https://docs.ray.io/en/latest/cluster/getting-started.html).
 
 ## Step 1
-Download the [following cluster yaml file](ray_cluster_setup.md) locally:
+Download the [following cluster yaml file](llm-batch-inference.yaml) locally:
 
 ```yaml
 # An unique identifier for the head node and workers of this cluster.
@@ -59,7 +59,21 @@ You can view the progress of the worker node startup by viewing the autoscaler s
 ![Screen Shot 2023-04-24 at 10 28 44 PM](https://user-images.githubusercontent.com/8068268/234182585-66ab4778-8a4b-4c34-acee-a0671ecd2fa7.png)
 
 ## Step 5
-In a separate window, SSH into the Ray cluster via `ray attach llm-batch-inference.yaml`
+Copy the [requirements.txt](requirements.txt) file and the [Ray batch inference code](embedding_ray.py) to the Ray cluster:
+
+```
+ray rsync_up llm-batch-inference.yaml 'embedding_ray.py' 'embedding_ray.py'
+ray rasync_up llm-batch-inference.yaml 'requirements.txt' 'requirements.txt'
+```
 
 ## Step 6
-Run the [Ray batch inference code](embedding_ray.py).
+In a separate window, SSH into the Ray cluster via `ray attach llm-batch-inference.yaml`
+## Step 7
+Install the requirements on the head node of the cluster
+
+`pip install -r requirements.txt`
+
+## Step 8
+Run the [Ray batch inference code](embedding_ray.py) on the cluster!
+
+`python embedding_ray.py`
