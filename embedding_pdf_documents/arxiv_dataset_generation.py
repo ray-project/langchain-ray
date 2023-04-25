@@ -1,5 +1,3 @@
-# pip install arxiv, tqdm
-
 import time
 from urllib.error import HTTPError
 
