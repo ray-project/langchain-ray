@@ -1,0 +1,31 @@
+# An unique identifier for the head node and workers of this cluster.
+cluster_name: llm-batch-inference
+
+max_workers: 5
+
+# Cloud-provider specific configuration.
+provider:
+    type: aws
+    region: us-west-2
+    key_pair:
+      key_name: llm-blogpost-test-pcm
+
+available_node_types:
+  ray.head.default:
+      resources: {"CPU": 48, "GPU": 4}
+      node_config:
+        InstanceType: g4dn.12xlarge
+        BlockDeviceMappings:
+            - DeviceName: /dev/sda1
+              Ebs:
+                  VolumeSize: 200
+  ray.worker.default:
+      node_config:
+        InstanceType: g4dn.12xlarge
+        BlockDeviceMappings:
+            - DeviceName: /dev/sda1
+              Ebs:
+                  VolumeSize: 200
+      resources: {"CPU": 48, "GPU": 4}
+      min_workers: 4
+      max_workers: 4
