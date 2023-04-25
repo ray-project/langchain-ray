@@ -1,7 +1,8 @@
+arxiv
+faiss-cpu
 langchain
 pypdf
 ray[data]
-torch
 sentence-transformers
+torch
 transformers
-faiss-cpu

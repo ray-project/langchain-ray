@@ -45,20 +45,24 @@ available_node_types:
 ```
 
 ## Step 2
+
 Then, you can start a Ray cluster via this YAML file: `ray up -y llm-batch-inference.yaml`
 
 ## Step 3
+
 You can connect via the remote Ray dashboard: `ray dashboard llm-batch-inference.yaml`. 
-This will setup the necessary port forwarding.
+This will set up the necessary port forwarding.
 
 The dashboard can be viewed by visiting `http://localhost:8265`
 
 ## Step 4
+
 You can view the progress of the worker node startup by viewing the autoscaler status on the Ray dashboard
 
 ![Screen Shot 2023-04-24 at 10 28 44 PM](https://user-images.githubusercontent.com/8068268/234182585-66ab4778-8a4b-4c34-acee-a0671ecd2fa7.png)
 
 ## Step 5
+
 Copy the [requirements.txt](requirements.txt) file and the [Ray batch inference code](embedding_ray.py) to the Ray cluster:
 
 ```
@@ -67,13 +71,17 @@ ray rasync_up llm-batch-inference.yaml 'requirements.txt' 'requirements.txt'
 ```
 
 ## Step 6
+
 In a separate window, SSH into the Ray cluster via `ray attach llm-batch-inference.yaml`
+
 ## Step 7
+
 Install the requirements on the head node of the cluster
 
 `pip install -r requirements.txt`
 
 ## Step 8
+
 Run the [Ray batch inference code](embedding_ray.py) on the cluster!
 
 `python embedding_ray.py`
