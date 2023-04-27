@@ -1,3 +1,7 @@
+"""This file is only intended for benchmarking purposes. 
+Use `embedding_ray.py` fir the actual LangChain+Ray code.
+"""
+
 from langchain.document_loaders import PyPDFLoader
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -10,6 +14,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 model_name = "sentence-transformers/all-mpnet-base-v2"
 model_kwargs = {"device": "cuda"}
+
 hf = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
 
 # Put your list of file paths here

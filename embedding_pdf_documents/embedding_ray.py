@@ -31,14 +31,21 @@ def convert_to_text(pdf_bytes: bytes):
             # Skip all pages that are not parseable due to malformed characters.
             print("parsing failed")
     return text
+    
 
-
+# We use `flat_map` as `convert_to_text` has a 1->N relationship.
+# It produces N strings for each PDF (one string per page).
+# Use `map` for 1->1 relationship.
 ds = ds.flat_map(convert_to_text)
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
 def split_text(page_text: str):
+    # Use chunk_size of 1000.
+    # We felt that the answer we would be looking for would be 
+    # around 200 words, or around 1000 characters.
+    # This parameter can be modified based on your documents and use case.
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000, chunk_overlap=100, length_function=len
     )
@@ -48,10 +55,15 @@ def split_text(page_text: str):
     return split_text
 
 
+# We use `flat_map` as `split_text` has a 1->N relationship.
+# It produces N output chunks for each input string.
+# Use `map` for 1->1 relationship.
 ds = ds.flat_map(split_text)
 
 from sentence_transformers import SentenceTransformer
 
+# Use LangChain's default model.
+# This model can be changed depending on your task.
 model_name = "sentence-transformers/all-mpnet-base-v2"
 
 
@@ -71,8 +83,13 @@ class Embed:
         return list(zip(text_batch, embeddings))
 
 
+# Use `map_batches` since we want to specify a batch size to maximize GPU utilization.
 ds = ds.map_batches(
     Embed,
+    # Large batch size to maximize GPU utilization.
+    # Too large a batch size may result in GPU running out of memory.
+    # If the chunk size is increased, then decrease batch size.
+    # If the chunk size is decreased, then increase batch size.
     batch_size=100,  # Large batch size to maximize GPU utilization.
     compute=ray.data.ActorPoolStrategy(size=20),  # I have 20 GPUs in my cluster
     num_gpus=1,  # 1 GPU for each actor.
@@ -85,7 +102,7 @@ text_and_embeddings = []
 for output in ds.iter_rows():
     text_and_embeddings.append(output)
 
-vectore_store = FAISS.from_embeddings(
+vector_store = FAISS.from_embeddings(
     text_and_embeddings,
     # Provide the embedding model to embed the query.
     # The documents are already embedded.
@@ -93,4 +110,4 @@ vectore_store = FAISS.from_embeddings(
 )
 
 # Persist the vector store.
-vectore_store.save_local("faiss_index")
+vector_store.save_local("faiss_index")

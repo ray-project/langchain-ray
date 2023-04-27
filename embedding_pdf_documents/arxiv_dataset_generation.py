@@ -1,3 +1,10 @@
+"""The code that was used to generate the document dataset.
+
+1. Make a search query to arxiv for the 2000 documents most relevant to "large language models"
+2. For each result, download the PDF locally to a directory, with some error handling.
+3. Upload the local directory to an AWS S3 bucket.
+"""
+
 import time
 from urllib.error import HTTPError
 

@@ -1,9 +1,13 @@
-# Creating a Ray cluster with 20 GPUs
+# Scaling Embedding Generation with LangChain and Ray
 
-This is a more detailed walkthrough covering how to create the multi-node Ray cluster for our blog post. 
+This is a more detailed walkthrough covering how to create the multi-node Ray cluster and run the code for our blog post. 
+
 The full Ray cluster launcher documentation can be found [here](https://docs.ray.io/en/latest/cluster/getting-started.html).
 
 ## Step 1
+Install Ray locally: `pip install 'ray[default]'`
+
+## Step 2
 Download the [following cluster yaml file](llm-batch-inference.yaml) locally:
 
 ```yaml
@@ -44,25 +48,21 @@ available_node_types:
       max_workers: 4
 ```
 
-## Step 2
-
+## Step 3
 Then, you can start a Ray cluster via this YAML file: `ray up -y llm-batch-inference.yaml`
 
-## Step 3
-
+## Step 4
 You can connect via the remote Ray dashboard: `ray dashboard llm-batch-inference.yaml`. 
-This will set up the necessary port forwarding.
+This will setup the necessary port forwarding.
 
 The dashboard can be viewed by visiting `http://localhost:8265`
 
-## Step 4
-
+## Step 5
 You can view the progress of the worker node startup by viewing the autoscaler status on the Ray dashboard
 
 ![Screen Shot 2023-04-24 at 10 28 44 PM](https://user-images.githubusercontent.com/8068268/234182585-66ab4778-8a4b-4c34-acee-a0671ecd2fa7.png)
 
-## Step 5
-
+## Step 6
 Copy the [requirements.txt](requirements.txt) file and the [Ray batch inference code](embedding_ray.py) to the Ray cluster:
 
 ```
@@ -70,18 +70,15 @@ ray rsync_up llm-batch-inference.yaml 'embedding_ray.py' 'embedding_ray.py'
 ray rasync_up llm-batch-inference.yaml 'requirements.txt' 'requirements.txt'
 ```
 
-## Step 6
-
+## Step 7
 In a separate window, SSH into the Ray cluster via `ray attach llm-batch-inference.yaml`
 
-## Step 7
-
+## Step 8
 Install the requirements on the head node of the cluster
 
 `pip install -r requirements.txt`
 
-## Step 8
-
+## Step 9
 Run the [Ray batch inference code](embedding_ray.py) on the cluster!
 
 `python embedding_ray.py`
