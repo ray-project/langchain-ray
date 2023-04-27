@@ -1,4 +1,4 @@
-# Scaing Embedding Generation with LangChain and Ray
+# Scaling Embedding Generation with LangChain and Ray
 
 This is a more detailed walkthrough covering how to create the multi-node Ray cluster and run the code for our blog post. 
 
