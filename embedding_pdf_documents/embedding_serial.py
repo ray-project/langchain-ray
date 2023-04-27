@@ -1,3 +1,7 @@
+"""This file is only intended for benchmarking purposes. 
+Use `embedding_ray.py` fir the actual LangChain+Ray code.
+"""
+
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
