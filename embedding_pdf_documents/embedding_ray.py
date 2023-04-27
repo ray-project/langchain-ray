@@ -102,7 +102,7 @@ text_and_embeddings = []
 for output in ds.iter_rows():
     text_and_embeddings.append(output)
 
-vectore_stor = FAISS.from_embeddings(
+vector_store = FAISS.from_embeddings(
     text_and_embeddings,
     # Provide the embedding model to embed the query.
     # The documents are already embedded.
