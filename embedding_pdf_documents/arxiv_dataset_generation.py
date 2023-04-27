@@ -5,16 +5,15 @@
 3. Upload the local directory to an AWS S3 bucket.
 """
 
-# pip install arxiv, tqdm
-
-import arxiv
 import time
-from tqdm import tqdm
 from urllib.error import HTTPError
 
+import arxiv
+from tqdm import tqdm
+
 search_results = arxiv.Search(
-  query= "large language models",
-  max_results = 2000,
+    query="large language models",
+    max_results=2000,
 )
 
 for result in tqdm(search_results):
@@ -34,5 +33,5 @@ for result in tqdm(search_results):
             # wait for some time before retrying the connection
             time.sleep(5)
 
-# Sync the local directory to S3         
+# Sync the local directory to S3
 # aws s3 sync ./arxiv_pdfs s3://arxiv-docs/
