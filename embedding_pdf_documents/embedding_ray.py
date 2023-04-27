@@ -110,4 +110,4 @@ vector_store = FAISS.from_embeddings(
 )
 
 # Persist the vector store.
-vectore_stor.save_local("faiss_index")
+vector_store.save_local("faiss_index")
