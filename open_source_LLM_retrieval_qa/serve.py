@@ -4,7 +4,7 @@ from starlette.requests import Request
 from ray import serve
 from typing import List, Optional, Any
 from langchain.llms.utils import enforce_stop_tokens
-from embeddings import LocalHuggingFaceEmbeddings 
+from local_embeddings import LocalHuggingFaceEmbeddings 
 from langchain.vectorstores import FAISS
 from langchain.llms import OpenAI
 from langchain.chains.qa_with_sources import load_qa_with_sources_chain
