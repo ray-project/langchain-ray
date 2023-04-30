@@ -8,7 +8,7 @@ import time
 import os
 import ray
 import numpy as np
-from embeddings import LocalHuggingFaceEmbeddings
+from local_embeddings import LocalHuggingFaceEmbeddings
 
 # To download the files locally for processing, here's the command line
 # wget -e robots=off --recursive --no-clobber --page-requisites --html-extension \
