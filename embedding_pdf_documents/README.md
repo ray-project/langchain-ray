@@ -49,6 +49,7 @@ available_node_types:
 ```
 
 ## Step 3
+Setup the necessary AWS credentials (set the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN` environment variables).
 Then, you can start a Ray cluster via this YAML file: `ray up -y llm-batch-inference.yaml`
 
 ## Step 4
@@ -79,6 +80,6 @@ Install the requirements on the head node of the cluster
 `pip install -r requirements.txt`
 
 ## Step 9
-Run the [Ray batch inference code](embedding_ray.py) on the cluster!
+Once all the worker nodes have started, run the [Ray batch inference code](embedding_ray.py) on the cluster!
 
 `python embedding_ray.py`
