@@ -68,7 +68,7 @@ Copy the [requirements.txt](requirements.txt) file and the [Ray batch inference 
 
 ```
 ray rsync_up llm-batch-inference.yaml 'embedding_ray.py' 'embedding_ray.py'
-ray rasync_up llm-batch-inference.yaml 'requirements.txt' 'requirements.txt'
+ray rsync_up llm-batch-inference.yaml 'requirements.txt' 'requirements.txt'
 ```
 
 ## Step 7
