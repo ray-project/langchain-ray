@@ -1,6 +1,8 @@
 """This file is only intended for benchmarking purposes. 
 Use `embedding_ray.py` fir the actual LangChain+Ray code.
 """
+import os
+from tqdm import tqdm
 
 from langchain.document_loaders import PyPDFLoader
 from langchain.embeddings import HuggingFaceEmbeddings
@@ -17,14 +19,22 @@ model_kwargs = {"device": "cuda"}
 
 hf = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
 
-# Put your list of file paths here
-pdf_documents = [...]
+# Put your directory containing PDFs here
+directory = '/tmp/data/'
+pdf_documents = [os.path.join(directory, filename) for filename in os.listdir(directory)]
 
 langchain_documents = []
-for document in pdf_documents:
-    loader = PyPDFLoader(document)
-    data = loader.load()
-    langchain_documents.append(data)
+for document in tqdm(pdf_documents):
+    try:
+        loader = PyPDFLoader(document)
+        data = loader.load()
+        langchain_documents.extend(data)
+    except Exception:
+        continue
 
+print("Num pages: ", len(langchain_documents))
+print("Splitting all documents")
 split_docs = text_splitter.split_documents(langchain_documents)
+
+print("Embed and create vector index")
 db = FAISS.from_documents(split_docs, embedding=hf)

@@ -10,9 +10,11 @@ ray.init(
     runtime_env={"pip": ["langchain", "pypdf", "sentence_transformers", "transformers"]}
 )
 
-ds = ray.data.read_binary_files("s3://arxiv-docs/")
+ds = ray.data.read_binary_files("s3://ray-llm-batch-inference/")
 
-
+# We use pypdf directly to read PDF directly from bytes.
+# LangChain can be used instead once https://github.com/hwchase17/langchain/pull/3915
+# is merged.
 def convert_to_text(pdf_bytes: bytes):
     pdf_bytes_io = io.BytesIO(pdf_bytes)
 
@@ -67,8 +69,12 @@ from sentence_transformers import SentenceTransformer
 model_name = "sentence-transformers/all-mpnet-base-v2"
 
 
+# We use sentence_transformers directly to provide a specific batch size.
+# LangChain's HuggingfaceEmbeddings can be used instead once https://github.com/hwchase17/langchain/pull/3914
+# is merged.
 class Embed:
     def __init__(self):
+        # Specify "cuda" to move the model to GPU.
         self.transformer = SentenceTransformer(model_name, device="cuda")
 
     def __call__(self, text_batch: List[str]):
@@ -91,7 +97,7 @@ ds = ds.map_batches(
     # If the chunk size is increased, then decrease batch size.
     # If the chunk size is decreased, then increase batch size.
     batch_size=100,  # Large batch size to maximize GPU utilization.
-    compute=ray.data.ActorPoolStrategy(size=20),  # I have 20 GPUs in my cluster
+    compute=ray.data.ActorPoolStrategy(min_size=20, max_size=20),  # I have 20 GPUs in my cluster
     num_gpus=1,  # 1 GPU for each actor.
 )
 
@@ -102,6 +108,7 @@ text_and_embeddings = []
 for output in ds.iter_rows():
     text_and_embeddings.append(output)
 
+print("Creating FAISS Vector Index.")
 vector_store = FAISS.from_embeddings(
     text_and_embeddings,
     # Provide the embedding model to embed the query.
@@ -109,5 +116,6 @@ vector_store = FAISS.from_embeddings(
     embedding=HuggingFaceEmbeddings(model_name=model_name),
 )
 
+print("Saving FAISS index locally.")
 # Persist the vector store.
 vector_store.save_local("faiss_index")

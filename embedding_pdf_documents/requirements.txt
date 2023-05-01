@@ -4,5 +4,6 @@ langchain
 pypdf
 ray[data]
 sentence-transformers
+tqdm
 torch
 transformers
