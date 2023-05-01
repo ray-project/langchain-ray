@@ -1,5 +1,5 @@
 """This file is only intended for benchmarking purposes. 
-Use `embedding_ray.py` fir the actual LangChain+Ray code.
+Use `embedding_ray.py` for the actual LangChain+Ray code.
 """
 import os
 from tqdm import tqdm
