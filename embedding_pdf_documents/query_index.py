@@ -1,3 +1,8 @@
+"""
+Query the local FAISS index.
+Run this script only after running `embedding_ray.py`
+"""
+
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain import FAISS
 
