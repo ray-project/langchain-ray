@@ -13,6 +13,7 @@ ray.init(
 from ray.data.datasource import FileExtensionFilter
 
 # Filter out non-PDF files.
+# The S3 bucket is public and contains all the PDF documents, as well as a CSV file containing the licenses for each.
 ds = ray.data.read_binary_files("s3://ray-llm-batch-inference/", partition_filter=FileExtensionFilter("pdf"))
 
 # We use pypdf directly to read PDF directly from bytes.
