@@ -10,7 +10,10 @@ ray.init(
     runtime_env={"pip": ["langchain", "pypdf", "sentence_transformers", "transformers"]}
 )
 
-ds = ray.data.read_binary_files("s3://ray-llm-batch-inference/")
+from ray.data.datasource.file_based_datasource import FileExtensionFilter
+
+# Filter out non-PDF files.
+ds = ray.data.read_binary_files("s3://ray-llm-batch-inference/", partition_filter=FileExtensionFilter("pdf"))
 
 # We use pypdf directly to read PDF directly from bytes.
 # LangChain can be used instead once https://github.com/hwchase17/langchain/pull/3915
