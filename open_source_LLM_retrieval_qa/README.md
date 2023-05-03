@@ -13,4 +13,4 @@ It probably will be too slow if you run it on your own M2 mac.
 
 Once you have a cloud machine with the required specifications, do `pip install ray[default]`
 
-To apply this to the Ray docs, use `tar xvfz 
+To apply this to the Ray docs, use `tar xvfz`.
