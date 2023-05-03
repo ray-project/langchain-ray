@@ -49,6 +49,8 @@ Once all the worker nodes have started, run the [Ray batch inference code](embed
 `python embedding_ray.py`
 
 ## Step 10
-After the workload finished, tear down the cluster
+
+After the workload finished, tear down the cluster! This needs to be run from outside the cluster, so if you are
+still in the cluster shell, make sure to exit with Control-C.
 
 `ray down llm-batch-inference.yaml`
