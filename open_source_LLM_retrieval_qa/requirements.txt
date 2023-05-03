@@ -1,0 +1,9 @@
+faiss-cpu
+langchain
+mypy-extensions
+openai
+openapi-schema-pydantic
+sentence-transformers
+torch
+typing-inspect
+wandb>=0.15.0 # Need latest version with LangChain support. 
