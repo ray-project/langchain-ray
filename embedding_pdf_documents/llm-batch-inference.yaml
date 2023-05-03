@@ -7,8 +7,19 @@ max_workers: 5
 provider:
     type: aws
     region: us-west-2
-    key_pair:
-      key_name: llm-blogpost-test-pcm
+    # In case you need to specify a pre-generated EC2 SSH key.
+    # In this case, you need to download the key from the EC2 console,
+    # move it to your ~/.ssh/ directory and grant the correct permissions like `chmod 400 ~/.ssh/llm-blogpost-test-key.pem`
+    # Then, uncomment the below lines and replace `key_name` with the name of your key:
+    # key_pair:
+    #   key_name: llm-blogpost-test-key
+
+# List of shell commands to run to set up nodes.
+setup_commands:
+    - >-
+        (stat $HOME/anaconda3/envs/tensorflow2_p38/ &> /dev/null &&
+        echo 'export PATH="$HOME/anaconda3/envs/tensorflow2_p38/bin:$PATH"' >> ~/.bashrc) || true
+    - which ray || pip install -U "ray[default]"
 
 available_node_types:
   ray.head.default:

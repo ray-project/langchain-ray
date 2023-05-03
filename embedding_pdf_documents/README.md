@@ -8,45 +8,9 @@ The full Ray cluster launcher documentation can be found [here](https://docs.ray
 Install Ray locally: `pip install 'ray[default]'`
 
 ## Step 2
-Download the [following cluster yaml file](llm-batch-inference.yaml) locally:
-
-```yaml
-# An unique identifier for the head node and workers of this cluster.
-cluster_name: llm-batch-inference
-
-max_workers: 5
-
-# Cloud-provider specific configuration.
-provider:
-    type: aws
-    region: us-west-2
-    # In case you need to specify a pre-generated EC2 SSH key.
-    # In this case, you need to download the key from the EC2 console, 
-    # move it to your ~/.ssh/ directory and grant the correct permissions like `chmod 400 ~/.ssh/llm-blogpost-test-key.pem`
-    # Then, uncomment the below lines and replace `key_name` with the name of your key:
-    # key_pair:
-    #   key_name: llm-blogpost-test-key
-
-available_node_types:
-  ray.head.default:
-      resources: {"CPU": 48, "GPU": 4}
-      node_config:
-        InstanceType: g4dn.12xlarge
-        BlockDeviceMappings:
-            - DeviceName: /dev/sda1
-              Ebs:
-                  VolumeSize: 200
-  ray.worker.default:
-      node_config:
-        InstanceType: g4dn.12xlarge
-        BlockDeviceMappings:
-            - DeviceName: /dev/sda1
-              Ebs:
-                  VolumeSize: 200
-      resources: {"CPU": 48, "GPU": 4}
-      min_workers: 4
-      max_workers: 4
-```
+Clone the repository `git clone https://github.com/ray-project/langchain-ray/` and switch into the directory
+`cd langchain-ray`.
+You can edit the [cluster yaml file](llm-batch-inference.yaml) if you need to make changes.
 
 ## Step 3
 Setup the necessary AWS credentials (set the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN` environment variables).
@@ -83,3 +47,8 @@ Install the requirements on the head node of the cluster
 Once all the worker nodes have started, run the [Ray batch inference code](embedding_ray.py) on the cluster!
 
 `python embedding_ray.py`
+
+## Step 10
+After the workload finished, tear down the cluster
+
+`ray down llm-batch-inference.yaml`
