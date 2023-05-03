@@ -14,7 +14,7 @@ from wandb.integration.langchain import WandbTracer
 
 from local_embeddings import LocalHuggingFaceEmbeddings
 
-FAISS_INDEX_PATH = 'faiss_index_fast' 
+FAISS_INDEX_PATH = "faiss_index_fast"
 
 
 template = """
@@ -36,11 +36,13 @@ PROMPT = PromptTemplate(template=template, input_variables=["context", "question
 
 class StableLMPipeline(HuggingFacePipeline):
     def _call(self, prompt: str, stop: Optional[List[str]] = None) -> str:
-        
-        response = self.pipeline(prompt, temperature=0.1, max_new_tokens=256, do_sample=True)
+
+        response = self.pipeline(
+            prompt, temperature=0.1, max_new_tokens=256, do_sample=True
+        )
         if self.pipeline.task == "text-generation":
             # Text generation return includes the starter text.
-            print(f'Response is: {response}')
+            print(f"Response is: {response}")
             text = response[0]["generated_text"][len(prompt) :]
         else:
             raise ValueError(
@@ -52,7 +54,7 @@ class StableLMPipeline(HuggingFacePipeline):
             # stop tokens when making calls to huggingface_hub.
             text = enforce_stop_tokens(text, [50278, 50279, 50277, 1, 0])
         return text
-    
+
     @classmethod
     def from_model_id(
         cls,
@@ -65,7 +67,7 @@ class StableLMPipeline(HuggingFacePipeline):
         """Construct the pipeline object from model_id and task."""
 
         pipeline = hf_pipeline(
-            model=model_id, 
+            model=model_id,
             task=task,
             device=device,
             model_kwargs=model_kwargs,
@@ -77,49 +79,49 @@ class StableLMPipeline(HuggingFacePipeline):
             **kwargs,
         )
 
-@serve.deployment(ray_actor_options={"num_gpus":1})
+
+@serve.deployment(ray_actor_options={"num_gpus": 1})
 class QADeployment:
     def __init__(self):
         WandbTracer.init({"project": "wandb_prompts_2"})
-        #Load the data from faiss
+        # Load the data from faiss
         st = time.time()
-        self.embeddings = LocalHuggingFaceEmbeddings('multi-qa-mpnet-base-dot-v1')
+        self.embeddings = LocalHuggingFaceEmbeddings("multi-qa-mpnet-base-dot-v1")
         self.db = FAISS.load_local(FAISS_INDEX_PATH, self.embeddings)
         et = time.time() - st
-        print(f'Loading FAISS database took {et} seconds.')
-        st = time.time() 
-        self.llm = StableLMPipeline.from_model_id(model_id="stabilityai/stablelm-tuned-alpha-7b", 
-                                                     task="text-generation", model_kwargs=
-                                                     {"device_map":"auto", "torch_dtype": torch.float16})
+        print(f"Loading FAISS database took {et} seconds.")
+        st = time.time()
+        self.llm = StableLMPipeline.from_model_id(
+            model_id="stabilityai/stablelm-tuned-alpha-7b",
+            task="text-generation",
+            model_kwargs={"device_map": "auto", "torch_dtype": torch.float16},
+        )
         et = time.time() - st
-        print(f'Loading HF model took {et} seconds.')
-        self.chain = load_qa_chain(
-            llm=self.llm,
-            chain_type="stuff",
-            prompt=PROMPT)
-    
+        print(f"Loading HF model took {et} seconds.")
+        self.chain = load_qa_chain(llm=self.llm, chain_type="stuff", prompt=PROMPT)
 
-    def search(self,query): 
+    def search(self, query):
         results = self.db.max_marginal_relevance_search(query)
-        retval = ''
+        retval = ""
         for i in range(len(results)):
             chunk = results[i]
-            source = chunk.metadata['source']
-            retval = retval + f'From http://{source}\n\n'
+            source = chunk.metadata["source"]
+            retval = retval + f"From http://{source}\n\n"
             retval = retval + chunk.page_content
-            retval = retval + '\n====\n\n'
-                           
+            retval = retval + "\n====\n\n"
+
         return retval
-    
+
     def qa(self, query):
         search_results = self.db.similarity_search(query)
-        print(f'Results from db are: {search_results}')
-        result = self.chain({"input_documents": search_results, "question":query})
-        
-        print(f'Result is: {result}')
+        print(f"Results from db are: {search_results}")
+        result = self.chain({"input_documents": search_results, "question": query})
+
+        print(f"Result is: {result}")
         return result["output_text"]
-    
+
     async def __call__(self, request: Request) -> List[str]:
         return self.qa(request.query_params["query"])
+
 
 deployment = QADeployment.bind()
