@@ -24,7 +24,7 @@ class LocalHuggingFaceEmbeddings(Embeddings):
 
     def embed_query(self, text: str) -> List[float]:
         """Embed a query using a locally running HF
-        Sentence trnsformer.
+        Sentence transformer.
 
         Args:
             text: The text to embed.
