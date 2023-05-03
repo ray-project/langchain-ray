@@ -20,8 +20,7 @@ This repo is as a go-to place for all technical examples and use cases on how to
 | Example                                         | Code                                        | Blog                                                                                    | Video                                                     |
 |-------------------------------------------------|---------------------------------------------|-----------------------------------------------------------------------------------------|-----------------------------------------------------------|
 | Open Source LLM Search Engine                   | [![github]](open_source_LLM_search_engine/) | [![article]](https://www.anyscale.com/blog/llm-open-source-search-engine-langchain-ray) | [![youtube]](https://www.youtube.com/watch?v=v7a8SR-sZpI) |
-| Parallelize LangChain embeddings across 20 GPUs | [![github]](embedding_pdf_documents/)       | [![article]]()                                                                          | [![youtube]]()                                            |
-
+| Turbocharge LangChain NOW: guide to 20x faster embedding | [![github]](embedding_pdf_documents/)       | [![article]](https://www.anyscale.com/blog/turbocharge-langchain-now-guide-to-20x-faster-embedding)                                                                          | [![youtube]](https://www.youtube.com/watch?v=hGnZajytlac)                                            |
 
 ## Connect with the Ray community
 
