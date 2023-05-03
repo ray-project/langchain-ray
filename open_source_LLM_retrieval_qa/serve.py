@@ -1,29 +1,18 @@
-import ray 
-import os
-from starlette.requests import Request
-from ray import serve
+import time
 from typing import List, Optional, Any
-from langchain.llms.utils import enforce_stop_tokens
-from local_embeddings import LocalHuggingFaceEmbeddings 
-from langchain.vectorstores import FAISS
-from langchain.llms import OpenAI
-from langchain.chains.qa_with_sources import load_qa_with_sources_chain
-from langchain.chains.question_answering import load_qa_chain
-from langchain import HuggingFacePipeline
-from langchain.prompts import PromptTemplate
-from langchain.chains import RetrievalQA
-from transformers import pipeline as hf_pipeline
-from transformers import (
-    AutoModelForCausalLM,
-    AutoModelForSeq2SeqLM,
-    AutoTokenizer,
-)
-
-from wandb.integration.langchain import WandbTracer
 
 import torch
+from langchain import HuggingFacePipeline
+from langchain.chains.question_answering import load_qa_chain
+from langchain.llms.utils import enforce_stop_tokens
+from langchain.prompts import PromptTemplate
+from langchain.vectorstores import FAISS
+from ray import serve
+from starlette.requests import Request
+from transformers import pipeline as hf_pipeline
+from wandb.integration.langchain import WandbTracer
 
-import time
+from local_embeddings import LocalHuggingFaceEmbeddings
 
 FAISS_INDEX_PATH = 'faiss_index_fast' 
 

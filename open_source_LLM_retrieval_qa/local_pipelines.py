@@ -1,23 +1,9 @@
-import os
-import time
 from typing import Any, List, Optional
-import ray
-import torch
+
 from langchain import HuggingFacePipeline
-from langchain.chains import RetrievalQA
-from langchain.chains.qa_with_sources import load_qa_with_sources_chain
-from langchain.chains.question_answering import load_qa_chain
-from langchain.llms import OpenAI
 from langchain.llms.utils import enforce_stop_tokens
-from langchain.prompts import PromptTemplate
-from langchain.vectorstores import FAISS
-from ray import serve
-from starlette.requests import Request
-from transformers import (AutoModelForCausalLM, AutoModelForSeq2SeqLM,
-                          AutoTokenizer)
 from transformers import pipeline as hf_pipeline
-from wandb.integration.langchain import WandbTracer
-from embeddings import LocalHuggingFaceEmbeddings
+
 
 class StableLMPipeline(HuggingFacePipeline):
     """ A StableLM Pipeline that executes its workload locally.
