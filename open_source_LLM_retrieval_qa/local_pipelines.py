@@ -1,8 +1,25 @@
+import os
+import time
 from typing import Any, List, Optional
 
+import ray
+import torch
 from langchain import HuggingFacePipeline
+from langchain.chains import RetrievalQA
+from langchain.chains.qa_with_sources import load_qa_with_sources_chain
+from langchain.chains.question_answering import load_qa_chain
+from langchain.llms import OpenAI
 from langchain.llms.utils import enforce_stop_tokens
+from langchain.prompts import PromptTemplate
+from langchain.vectorstores import FAISS
+from ray import serve
+from starlette.requests import Request
+from transformers import (AutoModelForCausalLM, AutoModelForSeq2SeqLM,
+                          AutoTokenizer)
 from transformers import pipeline as hf_pipeline
+from wandb.integration.langchain import WandbTracer
+
+from local_embeddings import LocalHuggingFaceEmbeddings
 
 
 class StableLMPipeline(HuggingFacePipeline):
@@ -18,7 +35,6 @@ class StableLMPipeline(HuggingFacePipeline):
     """
 
     def _call(self, prompt: str, stop: Optional[List[str]] = None) -> str:
-
         response = self.pipeline(
             prompt, temperature=0.1, max_new_tokens=256, do_sample=True
         )
@@ -28,7 +44,7 @@ class StableLMPipeline(HuggingFacePipeline):
             text = response[0]["generated_text"][len(prompt) :]
         else:
             raise ValueError(f"Got invalid task {self.pipeline.task}. ")
-        text = enforce_stop_tokens(text, [50278, 50279, 50277, 1, 0])
+        # text = enforce_stop_tokens(text, [50278, 50279, 50277, 1, 0])
         return text
 
     @classmethod

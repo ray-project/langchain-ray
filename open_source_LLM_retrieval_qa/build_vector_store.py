@@ -1,10 +1,14 @@
+import os
 import time
+from typing import List
 
 import numpy as np
 import ray
 from langchain.document_loaders import ReadTheDocsLoader
+from langchain.embeddings.base import Embeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
+from sentence_transformers import SentenceTransformer
 
 from local_embeddings import LocalHuggingFaceEmbeddings
 
@@ -17,7 +21,7 @@ FAISS_INDEX_PATH = "faiss_index_fast"
 db_shards = 8
 ray.init()
 
-loader = ReadTheDocsLoader("/mnt/user_storage/docs.ray.io/en/master/")
+loader = ReadTheDocsLoader("docs.ray.io/en/master/")
 
 text_splitter = RecursiveCharacterTextSplitter(
     # Set a really small chunk size, just to show.
