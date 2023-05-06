@@ -1,4 +1,4 @@
-import ray 
+import ray
 import os
 from starlette.requests import Request
 from ray import serve
@@ -25,10 +25,10 @@ import torch
 
 import time
 
-from local_embeddings import LocalHuggingFaceEmbeddings 
+from local_embeddings import LocalHuggingFaceEmbeddings
 from local_pipelines import StableLMPipeline
 
-FAISS_INDEX_PATH = 'faiss_index_fast' 
+FAISS_INDEX_PATH = "faiss_index_fast"
 
 
 template = """
@@ -47,42 +47,39 @@ ANSWER: <|ASSISTANT|>"""
 PROMPT = PromptTemplate(template=template, input_variables=["context", "question"])
 
 
-
-@serve.deployment(ray_actor_options={"num_gpus":1})
+@serve.deployment(ray_actor_options={"num_gpus": 1})
 class QADeployment:
     def __init__(self):
         WandbTracer.init({"project": "retrieval_demo"})
-        
-        #Load the data from faiss. No change from Part 1
+
+        # Load the data from faiss. No change from Part 1
         st = time.time()
-        self.embeddings = LocalHuggingFaceEmbeddings('multi-qa-mpnet-base-dot-v1')
+        self.embeddings = LocalHuggingFaceEmbeddings("multi-qa-mpnet-base-dot-v1")
         self.db = FAISS.load_local(FAISS_INDEX_PATH, self.embeddings)
         et = time.time() - st
-        
-        
-        print(f'Loading FAISS database took {et} seconds.')
-        st = time.time() 
-        
-        
-        self.llm = StableLMPipeline.from_model_id(model_id="stabilityai/stablelm-tuned-alpha-7b", 
-                                                     task="text-generation", model_kwargs=
-                                                     {"device_map":"auto", "torch_dtype": torch.float16})
+
+        print(f"Loading FAISS database took {et} seconds.")
+        st = time.time()
+
+        self.llm = StableLMPipeline.from_model_id(
+            model_id="stabilityai/stablelm-tuned-alpha-7b",
+            task="text-generation",
+            model_kwargs={"device_map": "auto", "torch_dtype": torch.float16},
+        )
         et = time.time() - st
-        print(f'Loading HF model took {et} seconds.')
-        self.chain = load_qa_chain(
-            llm=self.llm,
-            chain_type="stuff",
-            prompt=PROMPT)
-    
+        print(f"Loading HF model took {et} seconds.")
+        self.chain = load_qa_chain(llm=self.llm, chain_type="stuff", prompt=PROMPT)
+
     def qa(self, query):
         search_results = self.db.similarity_search(query)
-        print(f'Results from db are: {search_results}')
-        result = self.chain({"input_documents": search_results, "question":query})
-        
-        print(f'Result is: {result}')
+        print(f"Results from db are: {search_results}")
+        result = self.chain({"input_documents": search_results, "question": query})
+
+        print(f"Result is: {result}")
         return result["output_text"]
-    
+
     async def __call__(self, request: Request) -> List[str]:
         return self.qa(request.query_params["query"])
+
 
 deployment = QADeployment.bind()
