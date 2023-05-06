@@ -17,10 +17,12 @@ LangChain and Ray are two Python libraries that are emerging as key components o
 This repo is as a go-to place for all technical examples and use cases on how to use these two libraries together.
 
 ## Examples
-| Example                                                  | Code                                        | Blog                                                                                                | Video                                                     |
-|----------------------------------------------------------|---------------------------------------------|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
-| Open Source LLM Search Engine                            | [![github]](open_source_LLM_search_engine/) | [![article]](https://www.anyscale.com/blog/llm-open-source-search-engine-langchain-ray)             | [![youtube]](https://www.youtube.com/watch?v=v7a8SR-sZpI) |
-| Turbocharge LangChain NOW: guide to 20x faster embedding | [![github]](embedding_pdf_documents/)       | [![article]](https://www.anyscale.com/blog/turbocharge-langchain-now-guide-to-20x-faster-embedding) | [![youtube]](https://www.youtube.com/watch?v=hGnZajytlac) |
+
+| Example                                  | Code                                        | Blog                                                                                                | Video                                                     |
+|------------------------------------------|---------------------------------------------|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| Open Source LLM Search Engine            | [![github]](open_source_LLM_search_engine/) | [![article]](https://www.anyscale.com/blog/llm-open-source-search-engine-langchain-ray)             | [![youtube]](https://www.youtube.com/watch?v=v7a8SR-sZpI) |
+| Fast and Scalable Embedding Generation   | [![github]](embedding_pdf_documents/)       | [![article]](https://www.anyscale.com/blog/turbocharge-langchain-now-guide-to-20x-faster-embedding) | [![youtube]](https://www.youtube.com/watch?v=hGnZajytlac) |
+| Retrival-Based Question Answering System | [![github]](open_source_LLM_retrieval_qa/)  | [![article]]()                                                                                      | [![youtube]]()                                            |
 
 ## Connect with the Ray community
 
