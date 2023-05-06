@@ -19,12 +19,8 @@ from transformers import (
     AutoModelForSeq2SeqLM,
     AutoTokenizer,
 )
-
-
 import torch
-
 import time
-
 from local_embeddings import LocalHuggingFaceEmbeddings
 from local_pipelines import StableLMPipeline
 

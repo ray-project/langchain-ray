@@ -1,6 +1,7 @@
 import os
 import time
 from typing import Any, List, Optional
+
 import ray
 import torch
 from langchain import HuggingFacePipeline
@@ -13,9 +14,11 @@ from langchain.prompts import PromptTemplate
 from langchain.vectorstores import FAISS
 from ray import serve
 from starlette.requests import Request
-from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import (AutoModelForCausalLM, AutoModelForSeq2SeqLM,
+                          AutoTokenizer)
 from transformers import pipeline as hf_pipeline
 from wandb.integration.langchain import WandbTracer
+
 from local_embeddings import LocalHuggingFaceEmbeddings
 
 
