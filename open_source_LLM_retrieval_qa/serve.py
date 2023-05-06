@@ -13,6 +13,7 @@ from langchain import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from transformers import pipeline as hf_pipeline
+#Remove the line below if you don't want to use weights and biases. 
 from wandb.integration.langchain import WandbTracer
 from transformers import (
     AutoModelForCausalLM,
@@ -42,10 +43,12 @@ QUESTION: {question}
 ANSWER: <|ASSISTANT|>"""
 PROMPT = PromptTemplate(template=template, input_variables=["context", "question"])
 
-
+# On an M2 set num_gpus = 0
 @serve.deployment(ray_actor_options={"num_gpus": 1})
 class QADeployment:
     def __init__(self):
+        
+        #Remove this line is if you do not want to use weights and biases. 
         WandbTracer.init({"project": "retrieval_demo"})
 
         # Load the data from faiss. No change from Part 1
@@ -60,6 +63,7 @@ class QADeployment:
         self.llm = StableLMPipeline.from_model_id(
             model_id="stabilityai/stablelm-tuned-alpha-7b",
             task="text-generation",
+            # Note: float16 does not work on M1/M2 macs. Delete
             model_kwargs={"device_map": "auto", "torch_dtype": torch.float16},
         )
         et = time.time() - st

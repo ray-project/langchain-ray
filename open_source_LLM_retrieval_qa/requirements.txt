@@ -7,3 +7,6 @@ sentence-transformers
 torch
 typing-inspect
 wandb>=0.15.0 # Need latest version with LangChain support. 
+beautifulsoup4
+aiorwlock
+accelerate
