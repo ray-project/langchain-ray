@@ -17,7 +17,7 @@ from transformers import (AutoModelForCausalLM, AutoModelForSeq2SeqLM,
                           AutoTokenizer)
 from transformers import pipeline as hf_pipeline
 from wandb.integration.langchain import WandbTracer
-from embeddings import LocalHuggingFaceEmbeddings
+from local_embeddings import LocalHuggingFaceEmbeddings
 
 class StableLMPipeline(HuggingFacePipeline):
     """ A StableLM Pipeline that executes its workload locally.
@@ -41,7 +41,7 @@ class StableLMPipeline(HuggingFacePipeline):
             raise ValueError(
                 f"Got invalid task {self.pipeline.task}. "
             )
-        text = enforce_stop_tokens(text, [50278, 50279, 50277, 1, 0])
+        #text = enforce_stop_tokens(text, [50278, 50279, 50277, 1, 0])
         return text
     
     @classmethod

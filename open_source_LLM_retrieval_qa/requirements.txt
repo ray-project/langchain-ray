@@ -1,5 +1,5 @@
 faiss-cpu
-langchain
+langchain < 0.0.154 
 mypy-extensions
 openai
 openapi-schema-pydantic
