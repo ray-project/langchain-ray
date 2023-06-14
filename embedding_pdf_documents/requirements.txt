@@ -2,7 +2,7 @@ arxiv
 faiss-cpu
 langchain
 pypdf
-ray[data]
+ray[data]==2.4.0
 sentence-transformers
 tqdm
 torch
