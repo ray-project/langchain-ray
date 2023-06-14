@@ -1,3 +1,4 @@
+beautifulsoup4
 faiss-cpu
 langchain < 0.0.154 
 mypy-extensions
