@@ -3,6 +3,7 @@ langchain < 0.0.154
 mypy-extensions
 openai
 openapi-schema-pydantic
+ray
 sentence-transformers
 torch
 typing-inspect
